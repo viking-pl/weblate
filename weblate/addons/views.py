@@ -8,10 +8,10 @@ from django.urls import reverse
 from django.utils.translation import gettext
 from django.views.generic import ListView, UpdateView
 
-from weblate.addons.models import ADDONS, Addon
+from weblate.addons.models import ADDONS, Addon, AddonActivityLog
 from weblate.trans.models import Component
 from weblate.utils import messages
-from weblate.utils.views import PathViewMixin
+from weblate.utils.views import PathViewMixin, get_paginator
 
 
 class AddonList(PathViewMixin, ListView):
@@ -32,6 +32,13 @@ class AddonList(PathViewMixin, ListView):
         if message:
             messages.error(self.request, message)
         return redirect(self.get_success_url())
+
+    def get_addon_activity_log(self, component):
+        logs = AddonActivityLog.objects.filter(
+            component=component, 
+        ).order_by('-created')
+
+        return logs
 
     def get_context_data(self, **kwargs):
         result = super().get_context_data(**kwargs)
@@ -90,6 +97,7 @@ class AddonList(PathViewMixin, ListView):
                 "addon": addon(Addon()),
                 "form": form,
                 "object": self.kwargs["component_obj"],
+                "addon_activity_log": get_paginator(self.request, self.get_addon_activity_log(component)),
             },
         )
 

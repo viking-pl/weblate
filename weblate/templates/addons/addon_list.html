@@ -72,4 +72,51 @@
   </div>
 </div>
 
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">{% trans "Add-on Activity Logs" %}</h4>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>{% trans "Timestamp" %}</th>
+        <th>{% trans "Event" %}</th>
+        <th>{% trans "Details" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for log in addon_activity_log %}
+        <tr>
+          <td>{{ log.created|date:"Y-m-d H:i" }}</td>
+          <td>{{ log.event }}</td>
+          <td>{{ log.details|safe }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3">{% trans "No activity logs available." %}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  {% if addon_activity_log.has_other_pages %}
+    <div class="panel-footer">
+      <div class="text-center">
+        <nav>
+          <ul class="pagination">
+            {% if addon_activity_log.has_previous %}
+              <li><a href="?page={{ addon_activity_log.previous_page_number }}">&laquo; {% trans "Previous" %}</a></li>
+            {% endif %}
+            <!-- Optionally, add page numbers here -->
+            {% if addon_activity_log.has_next %}
+              <li><a href="?page={{ addon_activity_log.next_page_number }}">{% trans "Next" %} &raquo;</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
 {% endblock %}
