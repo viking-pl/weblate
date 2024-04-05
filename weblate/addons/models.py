@@ -210,11 +210,11 @@ def handle_addon_event(
     log_result = None
     error_occurred = False
     # Events to exclude from logging
-    exclude_from_logging = [
-        "EVENT_UNIT_PRE_CREATE",
-        "EVENT_UNIT_POST_SAVE",
-        "EVENT_STORE_POST_LOAD",
-    ]
+    exclude_from_logging = {
+        AddonEvent.EVENT_UNIT_PRE_CREATE,
+        AddonEvent.EVENT_UNIT_POST_SAVE,
+        AddonEvent.EVENT_STORE_POST_LOAD,
+    }
 
     # Shortcuts for frequently used variables
     if component is None and translation is not None:
@@ -248,7 +248,7 @@ def handle_addon_event(
             except Exception as error:
                 # Log failure
                 error_occurred = True
-                log_result = error
+                log_result = str(error)
                 scope.log_error(
                     "failed %s add-on: %s: %s", event.label, addon.name, error
                 )
@@ -264,15 +264,14 @@ def handle_addon_event(
                     )
                     addon.disable()
             finally:
-                if event.label not in exclude_from_logging:
+                if event not in exclude_from_logging:
                     AddonActivityLog.objects.create(
                         addon=addon,
                         component=component,
                         event=event,
                         details={"result": log_result, "error": error_occurred},
                     )
-                else:
-                    scope.log_debug("completed %s add-on: %s", event.label, addon.name)
+                scope.log_debug("completed %s add-on: %s", event.label, addon.name)
 
 
 @receiver(vcs_pre_push)

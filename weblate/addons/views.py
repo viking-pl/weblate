@@ -34,11 +34,9 @@ class AddonList(PathViewMixin, ListView):
         return redirect(self.get_success_url())
 
     def get_addon_activity_log(self, component):
-        logs = AddonActivityLog.objects.filter(
-            component=component, 
-        ).order_by('-created')
-
-        return logs
+        return AddonActivityLog.objects.filter(
+            component=component,
+        ).order_by("-created")
 
     def get_context_data(self, **kwargs):
         result = super().get_context_data(**kwargs)
@@ -97,7 +95,9 @@ class AddonList(PathViewMixin, ListView):
                 "addon": addon(Addon()),
                 "form": form,
                 "object": self.kwargs["component_obj"],
-                "addon_activity_log": get_paginator(self.request, self.get_addon_activity_log(component)),
+                "addon_activity_log": get_paginator(
+                    self.request, self.get_addon_activity_log(component)
+                ),
             },
         )
 
