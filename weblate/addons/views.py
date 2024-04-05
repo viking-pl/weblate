@@ -52,6 +52,10 @@ class AddonList(PathViewMixin, ListView):
             ),
             key=lambda x: x.name,
         )
+        result["addon_activity_log"] = get_paginator(
+            self.request,
+            self.get_addon_activity_log(component),
+        )
         return result
 
     def post(self, request, **kwargs):
@@ -95,9 +99,6 @@ class AddonList(PathViewMixin, ListView):
                 "addon": addon(Addon()),
                 "form": form,
                 "object": self.kwargs["component_obj"],
-                "addon_activity_log": get_paginator(
-                    self.request, self.get_addon_activity_log(component)
-                ),
             },
         )
 
