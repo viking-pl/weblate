@@ -190,6 +190,9 @@ class AddonsConf(AppConf):
     LOCALIZE_CDN_URL = None
     LOCALIZE_CDN_PATH = None
 
+    # How long to keep add-on activity log entries
+    ADDON_ACTIVITY_LOG_EXPIRY = 180
+
     class Meta:
         prefix = ""
 

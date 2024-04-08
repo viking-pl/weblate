@@ -5,6 +5,7 @@ Not yet released.
 
 **New features**
 
+* :ref:`addons` Added add-on activity log model for tracking add-on activity.
 * API improvements
 
   * Added :http:get:`/api/categories/(int:id)/statistics/`.
