@@ -266,7 +266,7 @@ def handle_addon_event(
                         addon.name,
                     )
                     addon.disable()
-            finally:
+            else:
                 if event not in exclude_from_logging:
                     AddonActivityLog.objects.create(
                         addon=addon,
