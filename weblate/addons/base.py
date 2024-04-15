@@ -239,6 +239,10 @@ class BaseAddon:
         """Event handler for component update."""
         # To be implemented in a subclass
 
+    def get_addon_activity_logs(self, component):
+        """Return activity logs for add-on."""
+        # To be implemented in a subclass
+
     def execute_process(
         self, component: Component, cmd: list[str], env: None | dict[str, str] = None
     ) -> None:

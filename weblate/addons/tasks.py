@@ -5,11 +5,14 @@
 from __future__ import annotations
 
 import os
+from datetime import timedelta
 
 from celery.schedules import crontab
+from django.conf import settings
 from django.db.models import F, Q
 from django.http import HttpRequest
 from django.utils import timezone
+from django.utils.timezone import now
 from lxml import html
 
 from weblate.addons.events import AddonEvent
@@ -123,6 +126,16 @@ def daily_addons() -> None:
 
 
 @app.task(trail=False)
+def cleanup_addon_activity_log() -> None:
+    """Cleanup old add-on activity log entries."""
+    from weblate.addons.models import AddonActivityLog
+
+    AddonActivityLog.objects.filter(
+        created__lt=now() - timedelta(days=settings.ADDON_ACTIVITY_LOG_EXPIRY)
+    ).delete()
+
+
+@app.task(trail=False)
 def postconfigure_addon(addon_id: int, addon=None) -> None:
     if addon is None:
         addon = Addon.objects.get(pk=addon_id)
@@ -132,3 +145,8 @@ def postconfigure_addon(addon_id: int, addon=None) -> None:
 @app.on_after_finalize.connect
 def setup_periodic_tasks(sender, **kwargs) -> None:
     sender.add_periodic_task(crontab(minute=45), daily_addons.s(), name="daily-addons")
+    sender.add_periodic_task(
+        crontab(hour=24),
+        cleanup_addon_activity_log.s(),
+        name="cleanup-addon-activity-log",
+    )

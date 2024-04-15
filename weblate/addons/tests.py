@@ -10,6 +10,7 @@ from unittest import SkipTest
 
 from django.core.management import call_command
 from django.core.management.base import CommandError
+from django.test import TestCase
 from django.test.utils import override_settings
 from django.urls import reverse
 from django.utils import timezone
@@ -48,7 +49,7 @@ from weblate.addons.models import ADDONS, Addon
 from weblate.addons.properties import PropertiesSortAddon
 from weblate.addons.removal import RemoveComments, RemoveSuggestions
 from weblate.addons.resx import ResxUpdateAddon
-from weblate.addons.tasks import daily_addons
+from weblate.addons.tasks import cleanup_addon_activity_log, daily_addons
 from weblate.addons.xml import XMLCustomizeAddon
 from weblate.addons.yaml import YAMLCustomizeAddon
 from weblate.lang.models import Language
@@ -1325,3 +1326,8 @@ class CDNJSAddonTest(ViewTestCase):
         )
         # The error should be there
         self.assertTrue(self.component.alert_set.filter(name="CDNAddonError").exists())
+
+
+class TasksTest(TestCase):
+    def test_cleanup_addon_activity_log(self) -> None:
+        cleanup_addon_activity_log()
