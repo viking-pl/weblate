@@ -64,7 +64,11 @@ class OpenAITranslation(BatchMachineTranslation):
 
     def __init__(self, settings=None) -> None:
         super().__init__(settings)
-        self.client = OpenAI(api_key=self.settings["key"], timeout=self.request_timeout)
+        self.client = OpenAI(
+            api_key=self.settings["key"],
+            timeout=self.request_timeout,
+            base_url=self.settings.get("base_url"),
+        )
         self._models: None | set[str] = None
 
     def is_supported(self, source, language) -> bool:
