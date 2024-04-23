@@ -310,3 +310,13 @@ class OpenAIMachineryForm(KeyMachineryForm):
         ),
         required=False,
     )
+    base_url = forms.URLField(
+        label=pgettext_lazy(
+            "Automatic suggestion service configuration",
+            "Translator Base URL",
+        ),
+        widget=forms.Textarea,
+        help_text=gettext_lazy("Base URL of the OpenAI API"),
+        required=False,
+        default=None,
+    )
