@@ -1492,6 +1492,7 @@ class ComponentSettingsForm(
             "auto_lock_error",
             "links",
             "manage_units",
+            "key_separator",
             "is_glossary",
             "glossary_color",
         )
@@ -1551,6 +1552,7 @@ class ComponentSettingsForm(
                         gettext("Translation settings"),
                         "allow_translation_propagation",
                         "manage_units",
+                        "key_separator",
                         "check_flags",
                         "variant_regex",
                         "enforced_checks",
@@ -1674,6 +1676,7 @@ class ComponentCreateForm(SettingsBaseForm, ComponentDocsMixin, ComponentAntispa
             "push_branch",
             "repoweb",
             "file_format",
+            "key_separator",
             "filemask",
             "template",
             "edit_template",
@@ -1825,6 +1828,13 @@ class ComponentScratchCreateForm(ComponentProjectForm):
         choices=FILE_FORMATS.get_choices(
             cond=lambda x: bool(x.new_translation) or hasattr(x, "update_bilingual")
         ),
+    )
+
+    key_separator = forms.CharField(
+        label=Component.key_separator.field.verbose_name,
+        max_length=Component.key_separator.field.max_length,
+        help_text=Component.key_separator.field.help_text,
+        initial=Component.key_separator.field.default,
     )
 
     def __init__(self, *args, **kwargs) -> None:
