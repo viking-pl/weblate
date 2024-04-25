@@ -41,7 +41,7 @@ DATABASES = {
         # use in case role name is different than user used for authentication.
         # "ALTER_ROLE": "weblate",
         # Database password.
-        "PASSWORD": "Haslodlaweblate0!",
+        "PASSWORD": "#f]jmUA]^7N>m!d",
         # Set to empty string for localhost.
         "HOST": "127.0.0.1",
         # Set to empty string for default.
